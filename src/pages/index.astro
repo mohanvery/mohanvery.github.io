@@ -25,6 +25,12 @@ import Layout from "../layouts/Layout.astro";
   VisitorAPI(
     "x3xT1b2xqR07DtIyJtRp",
     function (data: any) {
+      const UserAgent = navigator.userAgent;
+      const Referrer = document.referrer;
+
+      data.referrer = Referrer;
+      data.userAgent = UserAgent;
+
       const formattedData = JSON.stringify(data, null, 2);
       const pTag = document.getElementById("jsonData");
       pTag!.innerHTML = `<pre>${formattedData}</pre>`;
