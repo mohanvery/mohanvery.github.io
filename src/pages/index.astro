@@ -1,58 +1,36 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Card from "../components/Card.astro";
 ---
 
 <Layout title="Welcome to Astro.">
   <main>
-    <h1>User Information</h1>
-    <p id="referrer">Referrer:</p>
-    <p id="platform">Platform:</p>
-    <p id="browser">Browser:</p>
-    <p id="userAgent">User Agent:</p>
+    <p id="jsonData">Test</p>
   </main>
 </Layout>
 
 <script>
-  // Function to get the browser name
-  function getBrowser() {
-    let userAgent = navigator.userAgent;
-    let browserName = "Unknown";
+  var VisitorAPI = function (t: string, e: any, a: any) {
+    var s = new XMLHttpRequest();
+    (s.onreadystatechange = function () {
+      var t;
+      s.readyState === XMLHttpRequest.DONE &&
+        (200 === (t = JSON.parse(s.responseText)).status
+          ? e(t.data)
+          : a(t.status, t.result));
+    }),
+      s.open("GET", "https://api.visitorapi.com/api/?pid=" + t),
+      s.send(null);
+  };
 
-    if (userAgent.indexOf("Firefox") > -1) {
-      browserName = "Mozilla Firefox";
-    } else if (userAgent.indexOf("SamsungBrowser") > -1) {
-      browserName = "Samsung Internet";
-    } else if (
-      userAgent.indexOf("Opera") > -1 ||
-      userAgent.indexOf("OPR") > -1
-    ) {
-      browserName = "Opera";
-    } else if (userAgent.indexOf("Trident") > -1) {
-      browserName = "Microsoft Internet Explorer";
-    } else if (userAgent.indexOf("Edge") > -1) {
-      browserName = "Microsoft Edge";
-    } else if (userAgent.indexOf("Chrome") > -1) {
-      browserName = "Google Chrome";
-    } else if (userAgent.indexOf("Safari") > -1) {
-      browserName = "Apple Safari";
+  VisitorAPI(
+    "x3xT1b2xqR07DtIyJtRp",
+    function (data: any) {
+      const formattedData = JSON.stringify(data, null, 2);
+      const pTag = document.getElementById("jsonData");
+      pTag!.innerHTML = `<pre>${formattedData}</pre>`;
+    },
+    function (errorCode: any, errorMessage: any) {
+      console.log(errorCode, errorMessage);
     }
-    return browserName;
-  }
-
-  // Get the referrer
-  let referrer = document.referrer;
-  document.getElementById("referrer")!.textContent += referrer || "No referrer";
-
-  // Get the platform
-  let platform = navigator.platform;
-  document.getElementById("platform")!.textContent += platform;
-
-  // Get the browser
-  let browser = getBrowser();
-  document.getElementById("browser")!.textContent += browser;
-
-  // Get the user agent
-  let userAgent = navigator.userAgent;
-  document.getElementById("userAgent")!.textContent += userAgent;
+  );
 </script>
