@@ -5,9 +5,23 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="Welcome to Astro.">
     <main>
         <p id="jsonData">Test</p>
-        <button id="visitorApiButton">Fetch Visitor Data</button>
+        <div id="output">Test</div>
+        <button id="showPropertiesButton">Show Navigator Properties</button>
     </main>
 </Layout>
+
+<style>
+    #jsonData {
+        padding: 20px;
+        background-color: bisque;
+    }
+
+    #output {
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: antiquewhite;
+    }
+</style>
 
 <script>
     var VisitorAPI = function (t: string, e: any, a: any) {
@@ -23,27 +37,30 @@ import Layout from "../layouts/Layout.astro";
             s.send(null);
     };
 
-    function fetchVisitorData() {
+    const button = document.getElementById(
+        "showPropertiesButton"
+    ) as HTMLButtonElement;
+    button.addEventListener("click", showNavigatorProperties);
+
+    function showNavigatorProperties(): void {
+        const outputDiv = document.getElementById("output");
+        if (outputDiv) {
+            outputDiv.innerHTML = ""; // Clear previous content
+
+            for (let prop in navigator) {
+                const value = (navigator as any)[prop];
+                const p = document.createElement("p");
+                p.textContent = `${prop}: ${value}`;
+                outputDiv.appendChild(p);
+            }
+        }
+
         VisitorAPI(
             "x3xT1b2xqR07DtIyJtRp",
             function (data: any) {
                 const Referrer = document.referrer;
 
                 data.referrer = Referrer;
-
-                const formatNavigatorObject = (obj: any) => {
-                    const formattedObj: { [key: string]: any } = {};
-                    for (let key in obj) {
-                        if (typeof obj[key] === "object" && obj[key] !== null) {
-                            formattedObj[key] = formatNavigatorObject(obj[key]);
-                        } else {
-                            formattedObj[key] = obj[key];
-                        }
-                    }
-                    return formattedObj;
-                };
-
-                data.navigator = formatNavigatorObject(navigator);
 
                 const formattedData = JSON.stringify(data, null, 2);
                 const pTag = document.getElementById("jsonData");
@@ -54,8 +71,4 @@ import Layout from "../layouts/Layout.astro";
             }
         );
     }
-
-    document
-        .getElementById("visitorApiButton")!
-        .addEventListener("click", fetchVisitorData);
 </script>
