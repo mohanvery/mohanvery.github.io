@@ -3,40 +3,40 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Welcome to Astro.">
-  <main>
-    <p id="jsonData">Test</p>
-  </main>
+    <main>
+        <p id="jsonData">Test</p>
+    </main>
 </Layout>
 
 <script>
-  var VisitorAPI = function (t: string, e: any, a: any) {
-    var s = new XMLHttpRequest();
-    (s.onreadystatechange = function () {
-      var t;
-      s.readyState === XMLHttpRequest.DONE &&
-        (200 === (t = JSON.parse(s.responseText)).status
-          ? e(t.data)
-          : a(t.status, t.result));
-    }),
-      s.open("GET", "https://api.visitorapi.com/api/?pid=" + t),
-      s.send(null);
-  };
+    var VisitorAPI = function (t: string, e: any, a: any) {
+        var s = new XMLHttpRequest();
+        (s.onreadystatechange = function () {
+            var t;
+            s.readyState === XMLHttpRequest.DONE &&
+                (200 === (t = JSON.parse(s.responseText)).status
+                    ? e(t.data)
+                    : a(t.status, t.result));
+        }),
+            s.open("GET", "https://api.visitorapi.com/api/?pid=" + t),
+            s.send(null);
+    };
 
-  VisitorAPI(
-    "x3xT1b2xqR07DtIyJtRp",
-    function (data: any) {
-      const UserAgent = navigator.userAgent;
-      const Referrer = document.referrer;
+    VisitorAPI(
+        "x3xT1b2xqR07DtIyJtRp",
+        function (data: any) {
+            const Navigator = navigator;
+            const Referrer = document.referrer;
 
-      data.referrer = Referrer;
-      data.userAgent = UserAgent;
+            data.referrer = Referrer;
+            data.navigator = Navigator;
 
-      const formattedData = JSON.stringify(data, null, 2);
-      const pTag = document.getElementById("jsonData");
-      pTag!.innerHTML = `<pre>${formattedData}</pre>`;
-    },
-    function (errorCode: any, errorMessage: any) {
-      console.log(errorCode, errorMessage);
-    }
-  );
+            const formattedData = JSON.stringify(data, null, 2);
+            const pTag = document.getElementById("jsonData");
+            pTag!.innerHTML = `<pre>${formattedData}</pre>`;
+        },
+        function (errorCode: any, errorMessage: any) {
+            console.log(errorCode, errorMessage);
+        }
+    );
 </script>
