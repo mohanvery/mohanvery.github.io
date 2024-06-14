@@ -5,6 +5,7 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="Welcome to Astro.">
     <main>
         <p id="jsonData">Test</p>
+        <button id="visitorApiButton">Fetch Visitor Data</button>
     </main>
 </Layout>
 
@@ -22,21 +23,39 @@ import Layout from "../layouts/Layout.astro";
             s.send(null);
     };
 
-    VisitorAPI(
-        "x3xT1b2xqR07DtIyJtRp",
-        function (data: any) {
-            const Navigator = navigator;
-            const Referrer = document.referrer;
+    function fetchVisitorData() {
+        VisitorAPI(
+            "x3xT1b2xqR07DtIyJtRp",
+            function (data: any) {
+                const Referrer = document.referrer;
 
-            data.referrer = Referrer;
-            data.navigator = Navigator;
+                data.referrer = Referrer;
 
-            const formattedData = JSON.stringify(data, null, 2);
-            const pTag = document.getElementById("jsonData");
-            pTag!.innerHTML = `<pre>${formattedData}</pre>`;
-        },
-        function (errorCode: any, errorMessage: any) {
-            console.log(errorCode, errorMessage);
-        }
-    );
+                const formatNavigatorObject = (obj: any) => {
+                    const formattedObj: { [key: string]: any } = {};
+                    for (let key in obj) {
+                        if (typeof obj[key] === "object" && obj[key] !== null) {
+                            formattedObj[key] = formatNavigatorObject(obj[key]);
+                        } else {
+                            formattedObj[key] = obj[key];
+                        }
+                    }
+                    return formattedObj;
+                };
+
+                data.navigator = formatNavigatorObject(navigator);
+
+                const formattedData = JSON.stringify(data, null, 2);
+                const pTag = document.getElementById("jsonData");
+                pTag!.innerHTML = `<pre>${formattedData}</pre>`;
+            },
+            function (errorCode: any, errorMessage: any) {
+                console.log(errorCode, errorMessage);
+            }
+        );
+    }
+
+    document
+        .getElementById("visitorApiButton")!
+        .addEventListener("click", fetchVisitorData);
 </script>
