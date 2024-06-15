@@ -1,0 +1,75 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Welcome to Astro.">
+    <main class="monu-lal">
+        <div class="scroll-type" id="scrollType">Scroll type detection</div>
+    </main>
+</Layout>
+
+<style>
+    .monu-lal {
+        height: 200vh;
+    }
+
+    .scroll-type {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        border: 1px solid black;
+        padding: 20px;
+        font-size: 20px;
+    }
+</style>
+
+<script>
+    // TypeScript code to detect scroll type
+    const scrollTypeElement = document.getElementById(
+        "scrollType"
+    ) as HTMLDivElement;
+
+    function detectScrollType(event: Event) {
+        if (event.type === "wheel") {
+            scrollTypeElement.textContent = "Scrolling with mouse";
+        } else if (event.type === "keydown") {
+            scrollTypeElement.textContent = "Scrolling with keyboard";
+        } else if (event.type === "touchstart" || event.type === "touchmove") {
+            scrollTypeElement.textContent = "Scrolling with touchscreen";
+        } else if (event.type === "scroll") {
+            // Check if the scroll event was triggered by scrollbar drag
+            const isScrollbarDrag =
+                event.target === document.documentElement &&
+                document.documentElement.scrollTop > 0;
+            if (isScrollbarDrag) {
+                scrollTypeElement.textContent =
+                    "Scrolling by dragging scrollbar";
+            }
+        }
+
+        // @ts-ignore
+        clearTimeout(detectScrollType.timeout);
+        // @ts-ignore
+        detectScrollType.timeout = setTimeout(() => {
+            scrollTypeElement.textContent = "Scroll type detection";
+        }, 2000);
+    }
+
+    // Event listeners for different scroll events
+    window.addEventListener("wheel", detectScrollType);
+    window.addEventListener("keydown", detectScrollType);
+    window.addEventListener("touchstart", detectScrollType);
+    window.addEventListener("touchmove", detectScrollType);
+    window.addEventListener("scroll", detectScrollType);
+
+    // Event listener to detect scrollbar drag
+    window.addEventListener("mousedown", function (event) {
+        // Check if the mousedown event happened on the scrollbar
+        const isScrollbarClick =
+            event.target === document.documentElement &&
+            event.clientX >= window.innerWidth - 15;
+        if (isScrollbarClick) {
+            scrollTypeElement.textContent = "Scrolling by dragging scrollbar";
+        }
+    });
+</script>
