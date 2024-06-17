@@ -8,7 +8,7 @@ import Layout from "../layouts/Layout.astro";
     </main>
 </Layout>
 
-<style>
+<style is:global>
     .monu-lal {
         height: 200vh;
     }
@@ -20,6 +20,19 @@ import Layout from "../layouts/Layout.astro";
         border: 1px solid black;
         padding: 20px;
         font-size: 20px;
+    }
+
+    .trail {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #000000;
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0.8;
+        transition:
+            transform 0.1s,
+            opacity 1s;
     }
 </style>
 
@@ -72,4 +85,45 @@ import Layout from "../layouts/Layout.astro";
             scrollTypeElement.textContent = "Scrolling by dragging scrollbar";
         }
     });
+
+    const trailLength: number = 20;
+    const trails: HTMLDivElement[] = [];
+
+    for (let i = 0; i < trailLength; i++) {
+        const trail = document.createElement("div");
+        trail.className = "trail";
+        document.body.appendChild(trail);
+        trails.push(trail);
+    }
+
+    let mouseX: number = 0;
+    let mouseY: number = 0;
+
+    document.addEventListener("mousemove", (e: MouseEvent) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function updateTrails(): void {
+        for (let i = trails.length - 1; i > 0; i--) {
+            trails[i].style.left = trails[i - 1].style.left;
+            trails[i].style.top = trails[i - 1].style.top;
+        }
+        trails[0].style.left = `${mouseX}px`;
+        trails[0].style.top = `${mouseY}px`;
+    }
+
+    function fadeTrails(): void {
+        for (let i = 0; i < trails.length; i++) {
+            trails[i].style.opacity = `${1 - i / trails.length}`;
+        }
+    }
+
+    function animate(): void {
+        updateTrails();
+        fadeTrails();
+        requestAnimationFrame(animate);
+    }
+
+    animate();
 </script>
