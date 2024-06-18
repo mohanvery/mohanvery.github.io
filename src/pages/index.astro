@@ -40,21 +40,21 @@ import Layout from "../layouts/Layout.astro";
     const button = document.getElementById(
         "showPropertiesButton"
     ) as HTMLButtonElement;
-    button.addEventListener("click", showNavigatorProperties);
 
-    function showNavigatorProperties(): void {
-        const outputDiv = document.getElementById("output");
-        if (outputDiv) {
-            outputDiv.innerHTML = ""; // Clear previous content
+    button.addEventListener("click", callVistorApi);
 
-            for (let prop in navigator) {
-                const value = (navigator as any)[prop];
-                const p = document.createElement("p");
-                p.textContent = `${prop}: ${value}`;
-                outputDiv.appendChild(p);
-            }
-        }
+    const outputDiv = document.getElementById("output") as HTMLDivElement;
 
+    outputDiv.innerHTML = ""; // Clear previous content
+
+    for (let prop in navigator) {
+        const value = (navigator as any)[prop];
+        const p = document.createElement("p");
+        p.textContent = `${prop}: ${value}`;
+        outputDiv.appendChild(p);
+    }
+
+    function callVistorApi(): void {
         VisitorAPI(
             "x3xT1b2xqR07DtIyJtRp",
             function (data: any) {
