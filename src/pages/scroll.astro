@@ -6,6 +6,8 @@ import Layout from "../layouts/Layout.astro";
     <main class="monu-lal">
         <div class="scroll-type" id="scrollType">Scroll type detection</div>
         <button id="tapper">Clicker</button>
+        <button id="capper">Clicker</button>
+        <button id="fapper">Clicker</button>
     </main>
 </Layout>
 
@@ -14,6 +16,18 @@ import Layout from "../layouts/Layout.astro";
         position: fixed;
         bottom: 100px;
         right: 100px;
+    }
+
+    #capper {
+        position: fixed;
+        top: 100px;
+        right: 100px;
+    }
+
+    #fapper {
+        position: fixed;
+        bottom: 100px;
+        left: 100px;
     }
 
     .monu-lal {
