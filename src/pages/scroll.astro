@@ -5,6 +5,7 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="Welcome to Astro.">
     <main class="monu-lal">
         <div class="scroll-type" id="scrollType">Scroll type detection</div>
+        <div class="click-type" id="clickType">None</div>
         <button id="tapper">Tapper</button>
         <button id="capper">Capper</button>
         <button id="fapper">Fapper</button>
@@ -43,6 +44,15 @@ import Layout from "../layouts/Layout.astro";
         font-size: 20px;
     }
 
+    .click-type {
+        position: fixed;
+        top: 10px;
+        left: 250px;
+        border: 1px solid black;
+        padding: 20px;
+        font-size: 20px;
+    }
+
     .trail {
         position: absolute;
         width: 10px;
@@ -58,13 +68,19 @@ import Layout from "../layouts/Layout.astro";
 </style>
 
 <script>
+    const clickTypeElement = document.getElementById(
+        "clickType"
+    ) as HTMLDivElement;
+
     // TypeScript code to detect scroll type
     const scrollTypeElement = document.getElementById(
         "scrollType"
     ) as HTMLDivElement;
 
     function detectScrollType(event: Event) {
-        if (event.type === "wheel") {
+        if (event.type === "click") {
+            clickTypeElement.textContent = "Click Detected";
+        } else if (event.type === "wheel") {
             scrollTypeElement.textContent = "Scrolling with mouse";
         } else if (event.type === "keydown") {
             scrollTypeElement.textContent = "Scrolling with keyboard";
@@ -86,10 +102,12 @@ import Layout from "../layouts/Layout.astro";
         // @ts-ignore
         detectScrollType.timeout = setTimeout(() => {
             scrollTypeElement.textContent = "Scroll type detection";
+            clickTypeElement.textContent = "None";
         }, 2000);
     }
 
     // Event listeners for different scroll events
+    window.addEventListener("click", detectScrollType);
     window.addEventListener("wheel", detectScrollType);
     window.addEventListener("keydown", detectScrollType);
     window.addEventListener("touchstart", detectScrollType);
