@@ -17,6 +17,8 @@ const { title } = Astro.props;
         <title>{title}</title>
         {   title === "Links" && 
             <script is:inline>
+                console.log("inscript");
+                
                 window.addEventListener("blur", () => {
                     console.log("blur");
                 });
